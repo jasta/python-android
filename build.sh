@@ -4,10 +4,20 @@ export ROOTDIR=$(dirname $(readlink -f $0))
 export HOSTPYTHON=$ROOTDIR/hostpython
 export HOSTPGEN=$ROOTDIR/hostpgen
 
-export NDK="$HOME/source/android-ndk"
-export SDK="$HOME/source/android-sdk/"
-export NDKPLATFORM="$NDK/platforms/android-9/arch-arm"
+export NDK="$ANDROID_NDK"
+export SDK="$ANDROID_SDK"
 
+if [ -z "$NDK" ]; then
+  echo "*** Must set ANDROID_NDK environment variable to your NDK install path."
+  exit 1
+fi
+
+if [ -z "$SDK" ]; then
+  echo "*** Must set ANDROID_SDK environment variable to your SDK install path."
+  exit 1
+fi
+
+export NDKPLATFORM="$NDK/platforms/android-9/arch-arm"
 export PATH="$NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/:$NDK:$SDK/tools:$PATH"
 
 export PYVERSION="2.7.2"
@@ -20,7 +30,7 @@ export ARCH="armeabi"
 #export OFLAG="-O2"
 
 export CFLAGS="-mandroid $OFLAG -fomit-frame-pointer --sysroot $NDKPLATFORM -DNO_MALLINFO=1"
-if [ $ARCH == "armeabi-v7a" ]; then
+if [ "$ARCH" = "armeabi-v7a" ]; then
     CFLAGS+=" -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -mthumb"
 fi
 export CXXFLAGS="$CFLAGS"

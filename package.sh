@@ -16,8 +16,8 @@ mkdir -p $ROOTDIR/release/$PACKAGE/files/python/lib/python2.7/lib-dynload
 mkdir -p $ROOTDIR/release/$PACKAGE/files/python/lib/python2.7/config
 mkdir -p $ROOTDIR/release/$PACKAGE/extras/python
 
-cat $ROOTDIR/standalone_python.sh | sed -e s"/<PACKAGE>/$PACKAGE/g" > $ROOTDIR/release/$PACKAGE/files/python/bin/standalone_python.sh
-cp -r $ROOTDIR/build/bin/python $ROOTDIR/release/$PACKAGE/files/python/bin/python
+cat $ROOTDIR/standalone_python.sh | sed -e s"/<PACKAGE>/$PACKAGE/g" > $ROOTDIR/release/$PACKAGE/files/python/bin/python
+cp -r $ROOTDIR/build/bin/python2.7 $ROOTDIR/release/$PACKAGE/files/python/bin/python2.7
 cp -r $ROOTDIR/build/include/* $ROOTDIR/release/$PACKAGE/files/python/include/
 cp -r $ROOTDIR/build/lib/libpython2.7.so $ROOTDIR/release/$PACKAGE/files/python/lib/libpython2.7.so
 cp -r $ROOTDIR/libs/armeabi/libsqlite3.so $ROOTDIR/release/$PACKAGE/files/python/lib/libsqlite3.so
@@ -32,5 +32,8 @@ cd $ROOTDIR/release/$PACKAGE/extras/python/
 rm `find . | grep -v "so$\|py$"`
 rm -r `find . | grep test`
 
-adb push $ROOTDIR/release/$PACKAGE/files/ /data/data/$PACKAGE/files
+adb shell mkdir /mnt/sdcard/$PACKAGE
+adb shell mkdir /data/local/tmp/$PACKAGE
+adb push $ROOTDIR/release/$PACKAGE/files/ /data/local/tmp/$PACKAGE/files
 adb push $ROOTDIR/release/$PACKAGE/extras/ /mnt/sdcard/$PACKAGE/extras
+adb shell chmod 0755 /data/local/tmp/$PACKAGE/files/python/bin/python
